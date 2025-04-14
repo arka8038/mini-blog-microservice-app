@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import CommentCreate from './CommentCreate'
+import CommentList from './CommentList'
 
 interface Post {
   id: string
@@ -53,6 +55,8 @@ const PostList: React.FC = () => {
       className="bg-white shadow rounded-lg p-4 w-full sm:w-[48%] md:w-[30%] mb-4"
     >
       <h3 className="text-lg font-semibold text-gray-800">{post.title}</h3>
+      <CommentList postId={post.id} />
+      <CommentCreate postId={post.id} />
     </div>
   ))
 

@@ -28,4 +28,6 @@ app.post('/posts', (req: Request<{ title: string }>, res: Response<Post>) => {
 });
 
 const PORT = 4000;
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log('Listening on 4000');
+});
