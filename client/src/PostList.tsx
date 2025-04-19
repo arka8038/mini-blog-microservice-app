@@ -6,10 +6,11 @@ import CommentList from './CommentList'
 interface Post {
   id: string
   title: string
+  comments: { id: string; content: string }[]
 }
 
 const PostList: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([])
+  const [posts, setPosts] = useState<Record<string, Post>>({})
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -17,7 +18,8 @@ const PostList: React.FC = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true)
-        const res = await axios.get<Post[]>('http://localhost:4000/posts')
+        const res = await axios.get<Record<string, Post>>('http://localhost:4002/posts')
+        console.log('Fetched posts:', res.data)
         setPosts(res.data)
         setError(null)
       } catch (err) {
@@ -49,13 +51,13 @@ const PostList: React.FC = () => {
     )
   }
 
-  const renderedPosts = posts.map(post => (
+  const renderedPosts = Object.values(posts).map(post => (
     <div
       key={post.id}
       className="bg-white shadow rounded-lg p-4 w-full sm:w-[48%] md:w-[30%] mb-4"
     >
       <h3 className="text-lg font-semibold text-gray-800">{post.title}</h3>
-      <CommentList postId={post.id} />
+      <CommentList comments={post.comments} />
       <CommentCreate postId={post.id} />
     </div>
   ))
