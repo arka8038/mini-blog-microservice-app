@@ -20,9 +20,13 @@ app.post('/events', (req: Request, res: Response) => {
     console.error('Error sending event to query service', err.message);
   });
 
+  axios.post('http://localhost:4003/events', event).catch((err) => {
+    console.error('Error sending event to moderation service', err.message);
+  });
+
   res.send({ status: 'OK' });
 });
 
 app.listen(4005, () => {
-  console.log('Event bus listening on port 4005');
+  console.log('Event bus is listening on port 4005');
 });

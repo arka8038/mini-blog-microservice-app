@@ -11,7 +11,7 @@ app.use(cors());
 interface Post {
   id: string;
   title: string;
-  comments?: { id: string; content: string }[];
+  comments?: { id: string; content: string; status: string }[];
 }
 
 // app.get('/posts', (_req: Request, res: Response) => {
@@ -41,5 +41,5 @@ app.post('/events', async (req: Request, res: Response) => {
 });
 
 app.listen(4000, () => {
-  console.log('Listening on 4000');
+  console.log('Posts service is listening on port 4000');
 });

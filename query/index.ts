@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
@@ -9,17 +9,23 @@ app.use(cors());
 type Post = {
   id: string;
   title: string;
-  comments: { id: string; content: string }[];
+  comments: Comment[];
+};
+
+type Comment = {
+  id: string;
+  content: string;
+  status: string;
 };
 
 const posts: Record<string, Post> = {};
 
-app.get('/posts', (_req, res) => {
-  res.status(200).send(posts);
+app.get('/posts', (_req: Request, res: Response) => {
   console.log('Posts', posts);
+  res.status(200).send(posts);
 });
 
-app.post('/events', (req, res) => {
+app.post('/events', (req: Request, res: Response) => {
   const { type, data } = req.body;
   console.log('Received event:', type, data);
 
@@ -33,17 +39,23 @@ app.post('/events', (req, res) => {
   }
 
   if (type === 'CommentCreated') {
-    const { id, content, postId } = data;
+    const { id, content, postId, status } = data;
+    posts[postId].comments.push({ id, content, status });
+  }
 
-    posts[postId].comments.push({ id, content });
+  if (type === 'CommentUpdated') {
+    const { id, content, postId, status } = data;
+    const comment = posts[postId].comments.find((comment) => id === comment.id);
+    if (comment) {
+      comment.status = status;
+      comment.content = content;
+    }
   }
 
   console.log('Posts', posts);
-
   res.send({ status: 'OK' });
-  console.log(posts);
 });
 
 app.listen(4002, () => {
-  console.log('Query service listening on port 4002');
+  console.log('Query service is listening on port 4002');
 });

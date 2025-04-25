@@ -3,11 +3,17 @@ import axios from 'axios'
 import CommentCreate from './CommentCreate'
 import CommentList from './CommentList'
 
-interface Post {
+type Post = {
   id: string
   title: string
-  comments: { id: string; content: string }[]
+  comments: Comment[]
 }
+
+type Comment = {
+  id: string;
+  content: string;
+  status: 'approved' | 'pending' | 'rejected';
+};
 
 const PostList: React.FC = () => {
   const [posts, setPosts] = useState<Record<string, Post>>({})
